@@ -1,0 +1,2905 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/9/2026 11:53:16 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="SE7SS"
+  DTS:CreatorName="SE7SS\ASUS"
+  DTS:DTSID="{FFD0171C-41C0-4C7D-875E-9D680963AD56}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="From Source to Surgeries Fact"
+  DTS:PackageType="5"
+  DTS:VersionBuild="27"
+  DTS:VersionGUID="{DABFDFF3-3480-4756-B0B6-DB285AD76B89}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Load Fact_Surgeries"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{A44DA297-4176-4252-809A-333523FC1C4F}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Fact_Surgeries"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Load Fact_Surgeries\Calculate Measures"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Calculate Measures"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Calculate Measures.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Calculate Measures.Inputs[Derived Column Input].Columns[start_Time]"
+                      cachedDataType="dbTime2"
+                      cachedName="start_Time"
+                      cachedScale="7"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Calculate Measures.Inputs[Derived Column Input].Columns[end_Time]"
+                      cachedDataType="dbTime2"
+                      cachedName="end_Time"
+                      cachedScale="7"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Calculate Measures.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output].Columns[surgery_duration_minutes]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output].Columns[surgery_duration_minutes]"
+                      name="surgery_duration_minutes"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">(DT_I4)([DATEDIFF]("minute",(DT_DBTIMESTAMP)#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]},(DT_DBTIMESTAMP)#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]}) + ([DATEPART]("hh",(DT_DBTIMESTAMP)#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]}) &lt; [DATEPART]("hh",(DT_DBTIMESTAMP)#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]}) ? 1440 : 0))</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">(DT_I4)(DATEDIFF("minute",(DT_DBTIMESTAMP)start_Time,(DT_DBTIMESTAMP)end_Time) + (DATEPART("hh",(DT_DBTIMESTAMP)end_Time) &lt; DATEPART("hh",(DT_DBTIMESTAMP)start_Time) ? 1440 : 0))</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output].Columns[surgery_count]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output].Columns[surgery_count]"
+                      name="surgery_count"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">1</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">1</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Calculate Measures.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\Date Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Date Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [DWH].[D_Date]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [DWH].[D_Date]) [refTable]
+where [refTable].[Date] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="DateKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Date" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Day" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DaySuffix" dataType="DT_STR" length="2" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Weekday" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="WeekDayName" dataType="DT_STR" length="10" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="WeekDayName_Short" dataType="DT_STR" length="3" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="WeekDayName_FirstLetter" dataType="DT_STR" length="1" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="DOWInMonth" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DayOfYear" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="WeekOfMonth" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="WeekOfYear" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Month" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="MonthName" dataType="DT_STR" length="10" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="MonthName_Short" dataType="DT_STR" length="3" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="MonthName_FirstLetter" dataType="DT_STR" length="1" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Quarter" dataType="DT_UI1" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="QuarterName" dataType="DT_STR" length="6" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Year" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="MMYYYY" dataType="DT_STR" length="6" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="MonthYear" dataType="DT_STR" length="7" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="IsWeekend" dataType="DT_BOOL" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="IsHoliday" dataType="DT_BOOL" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="HolidayName" dataType="DT_STR" length="20" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="SpecialDays" dataType="DT_STR" length="20" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="FinancialYear" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="FinancialQuater" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="FinancialMonth" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="FirstDateofYear" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="LastDateofYear" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="FirstDateofQuater" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="LastDateofQuater" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="FirstDateofMonth" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="LastDateofMonth" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="FirstDateofWeek" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="LastDateofWeek" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CurrentYear" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CurrentQuater" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CurrentMonth" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CurrentWeek" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CurrentDay" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\Date Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Date Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Date Lookup.Inputs[Lookup Input].Columns[surgery_Date]"
+                      cachedDataType="dbDate"
+                      cachedName="surgery_Date"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">Date</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  errorRowDisposition="FailComponent"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Date Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Match Output].Columns[surgery_date_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Match Output].Columns[surgery_date_key]"
+                      name="surgery_date_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">DateKey</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Date Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Date Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\Doctor Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Doctor Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [DWH].[D_Doctor]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [DWH].[D_Doctor]) [refTable]
+where [refTable].[src_doctor_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="doctor_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="src_doctor_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="department_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="first_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="last_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="gender" dataType="DT_STR" length="1" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="contact_no" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="surgeon_type" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="office_type" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="create_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="update_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\Doctor Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Doctor Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Doctor Lookup.Inputs[Lookup Input].Columns[surgeon_Id]"
+                      cachedDataType="i4"
+                      cachedName="surgeon_Id"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">src_doctor_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Doctor Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Match Output].Columns[lkp_doctor_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Match Output].Columns[lkp_doctor_key]"
+                      name="lkp_doctor_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">doctor_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Doctor Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Doctor Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\DST Fact_Surgeries"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST Fact_Surgeries"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[DWH].[Fact_Surgeries]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[surgery_Id]"
+                      cachedDataType="i4"
+                      cachedName="surgery_Id"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_id]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Id]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[surgery_date_key]"
+                      cachedDataType="i4"
+                      cachedName="surgery_date_key"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_date_key]"
+                      lineageId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Match Output].Columns[surgery_date_key]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[surgery_duration_minutes]"
+                      cachedDataType="i4"
+                      cachedName="surgery_duration_minutes"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_duration_minutes]"
+                      lineageId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output].Columns[surgery_duration_minutes]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[surgery_count]"
+                      cachedDataType="i4"
+                      cachedName="surgery_count"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_count]"
+                      lineageId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output].Columns[surgery_count]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[lkp_patient_key]"
+                      cachedDataType="i4"
+                      cachedName="lkp_patient_key"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[patient_key]"
+                      lineageId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Match Output].Columns[lkp_patient_key]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[lkp_doctor_key]"
+                      cachedDataType="i4"
+                      cachedName="lkp_doctor_key"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[doctor_key]"
+                      lineageId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Match Output].Columns[lkp_doctor_key]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[lkp_room_key]"
+                      cachedDataType="i4"
+                      cachedName="lkp_room_key"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[room_key]"
+                      lineageId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Match Output].Columns[lkp_room_key]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[lkp_nurse_key]"
+                      cachedDataType="i4"
+                      cachedName="lkp_nurse_key"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[nurse_key]"
+                      lineageId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Match Output].Columns[lkp_nurse_key]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[lkp_helper_key]"
+                      cachedDataType="i4"
+                      cachedName="lkp_helper_key"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[helper_key]"
+                      lineageId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Match Output].Columns[lkp_helper_key]" />
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].Columns[create_timestamp]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="create_timestamp"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[create_timestamp]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[create_timestamp]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_key]"
+                      dataType="i4"
+                      name="surgery_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_id]"
+                      dataType="i4"
+                      name="surgery_id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_date_key]"
+                      dataType="i4"
+                      name="surgery_date_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[patient_key]"
+                      dataType="i4"
+                      name="patient_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[doctor_key]"
+                      dataType="i4"
+                      name="doctor_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[room_key]"
+                      dataType="i4"
+                      name="room_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[nurse_key]"
+                      dataType="i4"
+                      name="nurse_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[helper_key]"
+                      dataType="i4"
+                      name="helper_key" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_duration_minutes]"
+                      dataType="i4"
+                      name="surgery_duration_minutes" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[surgery_count]"
+                      dataType="i4"
+                      name="surgery_count" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input].ExternalColumns[create_timestamp]"
+                      dataType="dbTimeStamp"
+                      name="create_timestamp" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\Helper Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Helper Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [DWH].[D_Helper]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [DWH].[D_Helper]) [refTable]
+where [refTable].[src_helper_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="helper_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="src_helper_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="department_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="first_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="last_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="gender" dataType="DT_STR" length="1" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="contact_no" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="create_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="update_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\Helper Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Helper Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Helper Lookup.Inputs[Lookup Input].Columns[helper_Id]"
+                      cachedDataType="i4"
+                      cachedName="helper_Id"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">src_helper_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Helper Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Match Output].Columns[lkp_helper_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Match Output].Columns[lkp_helper_key]"
+                      name="lkp_helper_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">helper_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Helper Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Helper Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\Nurse Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Nurse Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [DWH].[D_Nurse]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [DWH].[D_Nurse]) [refTable]
+where [refTable].[src_nurse_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="nurse_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="src_nurse_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="department_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="first_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="last_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="gender" dataType="DT_STR" length="1" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="contact_no" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="create_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="update_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\Nurse Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Nurse Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Nurse Lookup.Inputs[Lookup Input].Columns[nurse_Id]"
+                      cachedDataType="i4"
+                      cachedName="nurse_Id"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">src_nurse_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Nurse Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Match Output].Columns[lkp_nurse_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Match Output].Columns[lkp_nurse_key]"
+                      name="lkp_nurse_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">nurse_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Nurse Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Nurse Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\Patient Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Patient Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [DWH].[D_Patient]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [DWH].[D_Patient]) [refTable]
+where [refTable].[src_patient_id] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="patient_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="src_patient_id" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="first_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="last_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="gender" dataType="DT_STR" length="1" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="date_of_birth" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="contact_no" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="patient_address" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="create_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="update_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\Patient Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Patient Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Patient Lookup.Inputs[Lookup Input].Columns[patient_Id]"
+                      cachedDataType="i4"
+                      cachedName="patient_Id"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">src_patient_id</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Patient Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Match Output].Columns[lkp_patient_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Match Output].Columns[lkp_patient_key]"
+                      name="lkp_patient_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">patient_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Patient Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Patient Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\Room Lookup"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+              description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+              name="Room Lookup"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement that generates the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [DWH].[D_Room]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [DWH].[D_Room]) [refTable]
+where [refTable].[src_room_no] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the type of connection used to access the reference dataset."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the cache type of the lookup table."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indicates whether to reference metadata in an XML format."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="room_key" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="src_room_no" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="department_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="room_type" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="create_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="update_timestamp" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                  name="ParameterMap">#{Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\Room Lookup.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="Connection manager used to access lookup data."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load Fact_Surgeries\Room Lookup.Inputs[Lookup Input]"
+                  name="Lookup Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load Fact_Surgeries\Room Lookup.Inputs[Lookup Input].Columns[room_No]"
+                      cachedDataType="i4"
+                      cachedName="room_No"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table that a column joins."
+                          name="JoinToReferenceColumn">src_room_no</property>
+                        <property
+                          dataType="System.Null"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Match Output]"
+                  errorOrTruncationOperation="Lookup"
+                  exclusionGroup="1"
+                  name="Lookup Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Room Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Match Output].Columns[lkp_room_key]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copy Column"
+                      lineageId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Match Output].Columns[lkp_room_key]"
+                      name="lkp_room_key"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the column in the reference table from which a column is copied."
+                          name="CopyFromReferenceColumn">room_key</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup No Match Output]"
+                  description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                  exclusionGroup="1"
+                  name="Lookup No Match Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Room Lookup.Inputs[Lookup Input]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Lookup Error Output"
+                  synchronousInputId="Package\Load Fact_Surgeries\Room Lookup.Inputs[Lookup Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC STG_SurgeryRecord"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[STG].[STG_SurgeryRecord]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT *
+FROM STG.STG_SurgeryRecord;</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Id]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Id]"
+                      name="surgery_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[patient_Id]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]"
+                      name="patient_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgeon_Id]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]"
+                      name="surgeon_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Type]"
+                      length="100"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Type]"
+                      name="surgery_Type"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Date]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]"
+                      name="surgery_Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]"
+                      dataType="dbTime2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[start_Time]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]"
+                      name="start_Time"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]"
+                      dataType="dbTime2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[end_Time]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]"
+                      name="end_Time"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[room_No]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]"
+                      name="room_No"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[notes]"
+                      length="1000"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[notes]"
+                      name="notes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[nurse_Id]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]"
+                      name="nurse_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[helper_Id]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]"
+                      name="helper_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[create_timestamp]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[create_timestamp]"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].Columns[create_timestamp]"
+                      name="create_timestamp"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Id]"
+                      dataType="i4"
+                      name="surgery_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[patient_Id]"
+                      dataType="i4"
+                      name="patient_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgeon_Id]"
+                      dataType="i4"
+                      name="surgeon_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="surgery_Type" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Date]"
+                      dataType="dbDate"
+                      name="surgery_Date" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[start_Time]"
+                      dataType="dbTime2"
+                      name="start_Time"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[end_Time]"
+                      dataType="dbTime2"
+                      name="end_Time"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[room_No]"
+                      dataType="i4"
+                      name="room_No" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      name="notes" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[nurse_Id]"
+                      dataType="i4"
+                      name="nurse_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[helper_Id]"
+                      dataType="i4"
+                      name="helper_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[create_timestamp]"
+                      dataType="dbTimeStamp"
+                      name="create_timestamp" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Id]"
+                      name="surgery_Id" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[patient_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[patient_Id]"
+                      name="patient_Id" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgeon_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgeon_Id]"
+                      name="surgeon_Id" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Type]"
+                      name="surgery_Type" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Date]"
+                      dataType="dbDate"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Date]"
+                      name="surgery_Date" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[start_Time]"
+                      dataType="dbTime2"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[start_Time]"
+                      name="start_Time"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[end_Time]"
+                      dataType="dbTime2"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[end_Time]"
+                      name="end_Time"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[room_No]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[room_No]"
+                      name="room_No" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[notes]"
+                      name="notes" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[nurse_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[nurse_Id]"
+                      name="nurse_Id" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[helper_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[helper_Id]"
+                      name="helper_Id" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[create_timestamp]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[create_timestamp]"
+                      name="create_timestamp" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Derived Column Output]"
+              endId="Package\Load Fact_Surgeries\DST Fact_Surgeries.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\Load Fact_Surgeries\Calculate Measures.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Lookup Match Output]"
+              endId="Package\Load Fact_Surgeries\Doctor Lookup.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\Load Fact_Surgeries\Patient Lookup.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Lookup Match Output1]"
+              endId="Package\Load Fact_Surgeries\Room Lookup.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\Load Fact_Surgeries\Doctor Lookup.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Lookup Match Output2]"
+              endId="Package\Load Fact_Surgeries\Nurse Lookup.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\Load Fact_Surgeries\Room Lookup.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Lookup Match Output3]"
+              endId="Package\Load Fact_Surgeries\Helper Lookup.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\Load Fact_Surgeries\Nurse Lookup.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Lookup Match Output4]"
+              endId="Package\Load Fact_Surgeries\Date Lookup.Inputs[Lookup Input]"
+              name="Lookup Match Output"
+              startId="Package\Load Fact_Surgeries\Helper Lookup.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[Lookup Match Output5]"
+              endId="Package\Load Fact_Surgeries\Calculate Measures.Inputs[Derived Column Input]"
+              name="Lookup Match Output"
+              startId="Package\Load Fact_Surgeries\Date Lookup.Outputs[Lookup Match Output]" />
+            <path
+              refId="Package\Load Fact_Surgeries.Paths[OLE DB Source Output]"
+              endId="Package\Load Fact_Surgeries\Patient Lookup.Inputs[Lookup Input]"
+              name="OLE DB Source Output"
+              startId="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load STG SurgeryRecord"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{0E144D84-7D8D-49B1-B2DB-92123D45797E}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load STG SurgeryRecord"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Load STG SurgeryRecord\Add create_timestamp column"
+              componentClassID="Microsoft.DerivedColumn"
+              contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+              name="Add create_timestamp column"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Load STG SurgeryRecord\Add create_timestamp column.Inputs[Derived Column Input]"
+                  description="Input to the Derived Column Transformation"
+                  name="Derived Column Input">
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Output]"
+                  description="Default Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  name="Derived Column Output"
+                  synchronousInputId="Package\Load STG SurgeryRecord\Add create_timestamp column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Output].Columns[create_timestamp]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Output].Columns[create_timestamp]"
+                      name="create_timestamp"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Expression"
+                          name="Expression">[GETDATE]()</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Derived Column Friendly Expression"
+                          expressionType="Notify"
+                          name="FriendlyExpression">GETDATE()</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Error Output]"
+                  description="Error Output of the Derived Column Transformation"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Derived Column Error Output"
+                  synchronousInputId="Package\Load STG SurgeryRecord\Add create_timestamp column.Inputs[Derived Column Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="DST STG_SurgeryRecord"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[STG].[STG_SurgeryRecord]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Connections[OleDbConnection]"
+                  connectionManagerID="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagaementDataWarehouse]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[surgery_Id]"
+                      cachedDataType="i4"
+                      cachedName="surgery_Id"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgery_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Id]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[patient_Id]"
+                      cachedDataType="i4"
+                      cachedName="patient_Id"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[patient_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[surgeon_Id]"
+                      cachedDataType="i4"
+                      cachedName="surgeon_Id"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgeon_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[surgery_Type]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="100"
+                      cachedName="surgery_Type"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgery_Type]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Type]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[surgery_Date]"
+                      cachedDataType="dbDate"
+                      cachedName="surgery_Date"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgery_Date]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[start_Time]"
+                      cachedDataType="dbTime2"
+                      cachedName="start_Time"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[start_Time]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[end_Time]"
+                      cachedDataType="dbTime2"
+                      cachedName="end_Time"
+                      cachedScale="7"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[end_Time]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[room_No]"
+                      cachedDataType="i4"
+                      cachedName="room_No"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[room_No]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[notes]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1000"
+                      cachedName="notes"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[notes]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[notes]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[nurse_Id]"
+                      cachedDataType="i4"
+                      cachedName="nurse_Id"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[nurse_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[helper_Id]"
+                      cachedDataType="i4"
+                      cachedName="helper_Id"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[helper_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]" />
+                    <inputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].Columns[create_timestamp]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="create_timestamp"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[create_timestamp]"
+                      lineageId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Output].Columns[create_timestamp]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgery_Id]"
+                      dataType="i4"
+                      name="surgery_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[patient_Id]"
+                      dataType="i4"
+                      name="patient_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgeon_Id]"
+                      dataType="i4"
+                      name="surgeon_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="surgery_Type" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[surgery_Date]"
+                      dataType="dbDate"
+                      name="surgery_Date" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[start_Time]"
+                      dataType="dbTime2"
+                      name="start_Time"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[end_Time]"
+                      dataType="dbTime2"
+                      name="end_Time"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[room_No]"
+                      dataType="i4"
+                      name="room_No" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      name="notes" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[nurse_Id]"
+                      dataType="i4"
+                      name="nurse_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[helper_Id]"
+                      dataType="i4"
+                      name="helper_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input].ExternalColumns[create_timestamp]"
+                      dataType="dbTimeStamp"
+                      name="create_timestamp" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="SRC SurgeryRecord"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT
+    surgery_Id,
+    patient_Id,
+    surgeon_Id,
+    surgery_Type,
+    surgery_Date,
+    start_Time,
+    end_Time,
+    room_No,
+    notes,
+    nurse_Id,
+    helper_Id
+FROM dbo.SurgeryRecord;</property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Connections[OleDbConnection]"
+                  connectionManagerID="{A122F824-0561-4666-BC25-95D2E5142BC5}:external"
+                  connectionManagerRefId="Project.ConnectionManagers[SQLEXPRESS HospitalManagementSystem]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Id]"
+                      name="surgery_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[patient_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[patient_Id]"
+                      name="patient_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgeon_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgeon_Id]"
+                      name="surgeon_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Type]"
+                      length="100"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Type]"
+                      name="surgery_Type"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Date]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[surgery_Date]"
+                      name="surgery_Date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]"
+                      dataType="dbTime2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[start_Time]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[start_Time]"
+                      name="start_Time"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]"
+                      dataType="dbTime2"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[end_Time]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[end_Time]"
+                      name="end_Time"
+                      scale="7"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[room_No]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[room_No]"
+                      name="room_No"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[notes]"
+                      length="1000"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[notes]"
+                      name="notes"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[nurse_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[nurse_Id]"
+                      name="nurse_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[helper_Id]"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].Columns[helper_Id]"
+                      name="helper_Id"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Id]"
+                      dataType="i4"
+                      name="surgery_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[patient_Id]"
+                      dataType="i4"
+                      name="patient_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgeon_Id]"
+                      dataType="i4"
+                      name="surgeon_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      name="surgery_Type" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[surgery_Date]"
+                      dataType="dbDate"
+                      name="surgery_Date" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[start_Time]"
+                      dataType="dbTime2"
+                      name="start_Time"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[end_Time]"
+                      dataType="dbTime2"
+                      name="end_Time"
+                      scale="7" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[room_No]"
+                      dataType="i4"
+                      name="room_No" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      name="notes" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[nurse_Id]"
+                      dataType="i4"
+                      name="nurse_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output].ExternalColumns[helper_Id]"
+                      dataType="i4"
+                      name="helper_Id" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Id]"
+                      name="surgery_Id" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[patient_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[patient_Id]"
+                      name="patient_Id" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgeon_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgeon_Id]"
+                      name="surgeon_Id" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Type]"
+                      codePage="1252"
+                      dataType="str"
+                      length="100"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Type]"
+                      name="surgery_Type" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Date]"
+                      dataType="dbDate"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[surgery_Date]"
+                      name="surgery_Date" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[start_Time]"
+                      dataType="dbTime2"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[start_Time]"
+                      name="start_Time"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[end_Time]"
+                      dataType="dbTime2"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[end_Time]"
+                      name="end_Time"
+                      scale="7" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[room_No]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[room_No]"
+                      name="room_No" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[notes]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1000"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[notes]"
+                      name="notes" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[nurse_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[nurse_Id]"
+                      name="nurse_Id" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[helper_Id]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[helper_Id]"
+                      name="helper_Id" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Load STG SurgeryRecord.Paths[Derived Column Output]"
+              endId="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord.Inputs[OLE DB Destination Input]"
+              name="Derived Column Output"
+              startId="Package\Load STG SurgeryRecord\Add create_timestamp column.Outputs[Derived Column Output]" />
+            <path
+              refId="Package\Load STG SurgeryRecord.Paths[OLE DB Source Output]"
+              endId="Package\Load STG SurgeryRecord\Add create_timestamp column.Inputs[Derived Column Input]"
+              name="OLE DB Source Output"
+              startId="Package\Load STG SurgeryRecord\SRC SurgeryRecord.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate STG Surgery"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5CA21CDD-FADC-44A0-BD30-CA28A8A74B3B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate STG Surgery"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{98A18E3B-CA6E-4874-8FEB-D3A7C277917D}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE STG.STG_SurgeryRecord;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{03EC8D91-EE49-4CDE-8324-7B50DCCCE2E0}"
+      DTS:From="Package\Truncate STG Surgery"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Load STG SurgeryRecord" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{905247AA-808F-4913-8FF9-4158CEB5AAE2}"
+      DTS:From="Package\Load STG SurgeryRecord"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Fact_Surgeries" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\Load Fact_Surgeries"
+          TopLeft="349.999980876844,227.933331748313" />
+        <NodeLayout
+          Size="198.4,41.6"
+          Id="Package\Load STG SurgeryRecord"
+          TopLeft="342.499981286626,134.333332399196" />
+        <NodeLayout
+          Size="182.4,41.6"
+          Id="Package\Truncate STG Surgery"
+          TopLeft="345.833314437834,61.5333329054382" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="439.36664786223,103.133332905438">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31.1999994937579"
+              Start="0,0"
+              End="0,23.6999994937579">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.6999994937579" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="437.983314506131,175.933332399196">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,51.9999993491175"
+              Start="0,0"
+              End="0,44.4999993491175">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,44.4999993491175" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Fact_Surgeries">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="145.6,41.6"
+          Id="Package\Load Fact_Surgeries\Doctor Lookup"
+          TopLeft="379.999994337559,223.99999666214" />
+        <NodeLayout
+          Size="145.6,41.6"
+          Id="Package\Load Fact_Surgeries\Helper Lookup"
+          TopLeft="373.111105551322,469.79999563396" />
+        <NodeLayout
+          Size="148,41.6"
+          Id="Package\Load Fact_Surgeries\Patient Lookup"
+          TopLeft="380.999994322658,138.999997928739" />
+        <NodeLayout
+          Size="200,41.6"
+          Id="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord"
+          TopLeft="359.999994635582,34.9999994784593" />
+        <NodeLayout
+          Size="137.6,41.6"
+          Id="Package\Load Fact_Surgeries\Date Lookup"
+          TopLeft="375.999994397163,557.399995365739" />
+        <NodeLayout
+          Size="172.8,45.6"
+          Id="Package\Load Fact_Surgeries\DST Fact_Surgeries"
+          TopLeft="360.799994695187,727.599996811151" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Load Fact_Surgeries\Calculate Measures"
+          TopLeft="361.99999460578,644.599996557831" />
+        <NodeLayout
+          Size="143.2,41.6"
+          Id="Package\Load Fact_Surgeries\Nurse Lookup"
+          TopLeft="375.999994397164,392.244439982375" />
+        <NodeLayout
+          Size="143.2,41.6"
+          Id="Package\Load Fact_Surgeries\Room Lookup"
+          TopLeft="377.999994367361,314.311106773217" />
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[OLE DB Source Output]"
+          TopLeft="457.49999447912,76.5999994784594">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,62.3999984502792"
+              Start="0,0"
+              End="0,54.8999984502792">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,54.8999984502792" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Lookup Match Output5]"
+          TopLeft="445.999994501471,598.999995365739">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.6000011920922"
+              Start="0,0"
+              End="0,38.1000011920922">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.1000011920922" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,13.2453130960461,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Lookup Match Output4]"
+          TopLeft="445.355549974243,511.39999563396">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.9999997317785"
+              Start="0,0"
+              End="0,38.4999997317785">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.4999997317785" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,13.4453123658893,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Lookup Match Output3]"
+          TopLeft="447.755549959342,433.844439982375">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35.9555556515851"
+              Start="0,0"
+              End="0,28.4555556515851">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.4555556515851" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,8.42309032579254,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Lookup Match Output2]"
+          TopLeft="448.599994382262,355.911106773217">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.333333209158"
+              Start="0,0"
+              End="0,28.833333209158">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.833333209158" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,8.61197910457898,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Lookup Match Output1]"
+          TopLeft="451.19999435246,265.59999666214">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48.7111101110772"
+              Start="0,0"
+              End="0,41.2111101110772">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.2111101110772" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,14.8008675555386,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Lookup Match Output]"
+          TopLeft="453.899994330108,180.599997928739">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.3999987334013"
+              Start="0,0"
+              End="0,35.8999987334013">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.8999987334013" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,12.1453118667006,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact_Surgeries.Paths[Derived Column Output]"
+          TopLeft="447.199994650483,686.199996557831">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.4000002533201"
+              Start="0,0"
+              End="0,33.9000002533201">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.9000002533201" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\Doctor Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[DWH].[D_Doctor]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\Helper Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[DWH].[D_Helper]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\Patient Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[DWH].[D_Patient]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\SRC STG_SurgeryRecord">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\Date Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[DWH].[D_Date]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\DST Fact_Surgeries">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\Nurse Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[DWH].[D_Nurse]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact_Surgeries\Room Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[DWH].[D_Room]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Load STG SurgeryRecord">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="199.2,41.6"
+          Id="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord"
+          TopLeft="227.266655648086,207.999998553594" />
+        <NodeLayout
+          Size="172.8,41.6"
+          Id="Package\Load STG SurgeryRecord\SRC SurgeryRecord"
+          TopLeft="238.333320311375,17.3333332127995" />
+        <NodeLayout
+          Size="218.4,41.6"
+          Id="Package\Load STG SurgeryRecord\Add create_timestamp column"
+          TopLeft="222.36665578468,108.333332579997" />
+        <EdgeLayout
+          Id="Package\Load STG SurgeryRecord.Paths[OLE DB Source Output]"
+          TopLeft="328.149988048028,58.9333332127995">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49.3999993671974"
+              Start="0,0"
+              End="0,41.8999993671974">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.8999993671974" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load STG SurgeryRecord.Paths[Derived Column Output]"
+          TopLeft="326.716655852977,149.933332579997">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58.0666659735973"
+              Start="0,0"
+              End="0,50.5666659735973">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5666659735973" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load STG SurgeryRecord\DST STG_SurgeryRecord">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load STG SurgeryRecord\SRC SurgeryRecord">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
